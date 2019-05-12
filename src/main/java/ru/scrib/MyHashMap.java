@@ -121,13 +121,13 @@ public class MyHashMap<K, V> {
 
     /**
      * Добавляет новую запись.
-     * Если карта ранее содержала сопоставление для ключа, старое значение заменяется.
+     * Если Map ранее содержала сопоставление для ключа, старое значение заменяется.
      *
      * @return предыдущее значение key или null, если не было значения для key.
      */
-    public V put(K key, V value) {
+    public V insert(K key, V value) {
         if (key == null)
-            return putForNullKey(value);
+            return insertForNullKey(value);
         int hash = hash(key.hashCode());
         int i = indexFor(hash, table.length);
         for (Entry<K, V> e = table[i]; e != null; e = e.next) {
@@ -146,7 +146,7 @@ public class MyHashMap<K, V> {
     /**
      * Добавляет запись с null ключом
      */
-    private V putForNullKey(V value) {
+    private V insertForNullKey(V value) {
         for (Entry<K, V> e = table[0]; e != null; e = e.next) {
             // Если уже есть null ключ, меняем значение
             if (e.key == null) {
@@ -159,6 +159,11 @@ public class MyHashMap<K, V> {
         return null;
     }
 
+    /**
+     * Вложенный класс для элемента таблицы
+     * @param <K>
+     * @param <V>
+     */
     class Entry<K, V> implements Map.Entry<K, V> {
         final K key;
         final int hash;
@@ -219,7 +224,7 @@ public class MyHashMap<K, V> {
     }
 
     /**
-     * Возвращвет значение, которое сопоставлено key
+     * Возвращает значение, которое сопоставлено key
      * или null, если ключа нет
      *
      */
@@ -250,7 +255,7 @@ public class MyHashMap<K, V> {
      * Возвращает true, если key есть в Map
      *
      */
-    public boolean containsKey(Object key) {
+    public boolean find(Object key) {
         return getEntry(key) != null;
     }
 
@@ -269,48 +274,20 @@ public class MyHashMap<K, V> {
     }
 
     /**
-     * Возвращает true, если в Map есть один или несколько ключей для value
-     *
-     */
-    public boolean containsValue(Object value) {
-        if (value == null)
-            return containsNullValue();
-
-        Entry[] tab = table;
-        for (int i = 0; i < tab.length ; i++)
-            for (Entry e = tab[i] ; e != null ; e = e.next)
-                if (value.equals(e.value))
-                    return true;
-        return false;
-    }
-
-    /**
-     * Возвращает true, если в Map есть ключ для null
-     */
-    private boolean containsNullValue() {
-        Entry[] tab = table;
-        for (int i = 0; i < tab.length ; i++)
-            for (Entry e = tab[i] ; e != null ; e = e.next)
-                if (e.value == null)
-                    return true;
-        return false;
-    }
-
-    /**
      * Удаляет запись по ключу
      * Возвращает true, если удаление было выполнено
      *
      */
-    public boolean remove(Object key) {
-        Entry<K,V> e = removeEntryForKey(key);
+    public boolean delete(Object key) {
+        Entry<K,V> e = deleteEntryForKey(key);
         return !(e == null);
     }
 
     /**
-     * Удаляет и возвращает запись соответсвующюю ключу
+     * Удаляет и возвращает запись соответсвующую ключу
      *
      */
-    final Entry<K,V> removeEntryForKey(Object key) {
+    final Entry<K,V> deleteEntryForKey(Object key) {
         int hash = (key == null) ? 0 : hash(key.hashCode());
         int i = indexFor(hash, table.length);
         Entry<K,V> prev = table[i];
