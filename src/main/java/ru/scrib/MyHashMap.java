@@ -1,6 +1,5 @@
 package ru.scrib;
 
-
 import java.util.Map;
 
 public class MyHashMap<K, V> {
@@ -44,8 +43,6 @@ public class MyHashMap<K, V> {
      * Изменяет размер таблицы с переносом всех записей
      */
     private void resize(int newCapacity) {
-        Entry[] oldTable = table;
-        int oldCapacity = oldTable.length;
         Entry[] newTable = new Entry[newCapacity];
         transfer(newTable);
         table = newTable;
@@ -66,8 +63,6 @@ public class MyHashMap<K, V> {
                     // Так как новая таблица имеет другой capacity, то и хэш-коды
                     // нужно помещать в другие бакеты
                     int j = indexFor(e.hash, newCapacity);
-                    // Если кладём в один бакет, то элементы меняются местами
-                    // так как добавляем в начало списка
                     e.next = newTable[j];
                     newTable[j] = e;
                     e = next;
@@ -164,7 +159,7 @@ public class MyHashMap<K, V> {
      * @param <K>
      * @param <V>
      */
-    class Entry<K, V> implements Map.Entry<K, V> {
+    private class Entry<K, V> implements Map.Entry<K, V> {
         final K key;
         final int hash;
         V value;
@@ -287,7 +282,7 @@ public class MyHashMap<K, V> {
      * Удаляет и возвращает запись соответсвующую ключу
      *
      */
-    final Entry<K,V> deleteEntryForKey(Object key) {
+     private Entry<K,V> deleteEntryForKey(Object key) {
         int hash = (key == null) ? 0 : hash(key.hashCode());
         int i = indexFor(hash, table.length);
         Entry<K,V> prev = table[i];
@@ -319,6 +314,4 @@ public class MyHashMap<K, V> {
             tab[i] = null;
         size = 0;
     }
-
-
 }
